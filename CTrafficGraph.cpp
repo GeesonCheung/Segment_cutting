@@ -1,6 +1,26 @@
 #include "CTrafficGraph.h"
 #include <cmath>
-bool doubleEqual(double a, double b)
+
+CTrafficGraph::CTrafficGraph(vector<stfEdge>& vecEdges)
+{
+	if (vecEdges.empty())
+	{
+		return;
+	}
+	fPointID = 0;
+	fEdgeID = 0;
+
+	for (int i = 0; i < vecEdges.size(); i++)
+	{
+		InputEdge(vecEdges[i].StartPoint, vecEdges[i].EndPoint);
+	}
+}
+
+CTrafficGraph::~CTrafficGraph()
+{
+}
+
+bool CTrafficGraph::doubleEqual(double a, double b)
 {
 	if (fabs(a - b) < 0.0001) {
 		return true;
@@ -9,13 +29,13 @@ bool doubleEqual(double a, double b)
 	return false;
 }
 
-double GetPointDistance(const stfPoint_t& p1, const stfPoint_t& p2)
+double CTrafficGraph::GetPointDistance(const stfPoint_t& p1, const stfPoint_t& p2)
 {
 	return sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y));
 }
 
 //计算点到线段距离
-double PointToSegDist(const stfPoint_t& p1, const stfPoint_t& p2, const stfPoint_t& p)
+double CTrafficGraph::PointToSegDist(const stfPoint_t& p1, const stfPoint_t& p2, const stfPoint_t& p)
 {
 	float a, b, c;
 	a = GetPointDistance(p2, p);
@@ -28,51 +48,31 @@ double PointToSegDist(const stfPoint_t& p1, const stfPoint_t& p2, const stfPoint
 	if (c <= 0.00001)
 		return a;//如果p1和p2坐标相同，则退出函数，并返回距离 
 
-		/*钝角 Obtuse angle
-			
-		  p2*
-       \ *
-				\  * 
-				 \____*p
-				 p1
-				 */
+	/*钝角 Obtuse angle
+	   p2*
+            \ *
+             \  * 
+	      \p1____*p
+				
+	 */
 	float aa = a * a;
 	float bb = b * b;
 	float cc = c * c;
 	if (a*a > b * b + c * c + 0.00001)
 		return 0.0f;
-		/*钝角 Obtuse angle
+	/*钝角 Obtuse angle
 	   p1*
-       \ *
-				\  * 
-				 \____*p
-				 p2
-	  */
+            \ *
+             \  * 
+	      \p2___*p
+				
+	 */
 	if (b*b  > a * a + c * c + 0.00001)
 		return 0.0f;
 
 	float l = (a + b + c) / 2;//周长的一半
 	float s = sqrt(l*(l - a)*(l - b)*(l - c));//海伦公式求面积
 	return 2 * s / c;
-}
-
-CTrafficGraph::CTrafficGraph(vector<stfEdge>& vecEdges)
-{
-	if (vecEdges.empty())
-	{
-		return;
-	}
-	fPointID = 0;
-	fEdgeID = 0;
-	
-	for (int i = 0; i < vecEdges.size(); i++)
-	{
-		InputEdge(vecEdges[i].StartPoint, vecEdges[i].EndPoint);
-	}
-}
-
-CTrafficGraph::~CTrafficGraph()
-{
 }
 
 bool CTrafficGraph::hasPoint(const stfPoint_t& Point, unsigned int& ID)
