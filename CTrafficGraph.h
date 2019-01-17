@@ -118,8 +118,8 @@ public:
 	   *Summary: 向已有线段集合中添加线段
 		*Parameters:
 		      @input: 
-			      startPoint: 线段起点 
-		          endPoint:   线段终点
+			 startPoint: 线段起点 
+		         endPoint:   线段终点
 		*Return: void.
 	*/
 	void InputEdge(stfPoint_t& startPoint, stfPoint_t& endPoint);
@@ -141,7 +141,8 @@ public:
 	unsigned int  AddPoint( stfPoint_t& Point);
 	unsigned int  AddEdge( stfPoint_t& startPoint, stfPoint_t& endPoint);
 	double PointToSegDist(const stfPoint_t& p1,const stfPoint_t& p2,const stfPoint_t& p);
-  bool  doubleEqual(double a, double b);
+	double GetPointDistance(const stfPoint_t& p1, const stfPoint_t& p2);
+        bool  doubleEqual(double a, double b);
 protected:
 	unsigned int fPointID;
 	unsigned int fEdgeID;
